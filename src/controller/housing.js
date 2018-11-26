@@ -232,6 +232,16 @@ export default({ config, db }) => {
             res.send(housings);
         });
     });
+
+    // 'housing/Details/address' - get estimated rent price of address with fields HouseType, zipCode, Area, Price, Estimated Rent
+    api.get('Details/State=:State/Locality=:Locality/ZipCode=:ZipCode/Address=:Address/', (req, res) => {
+        Housing.find({ 'State': req.params.State, 'Locality': req.params.Locality, 'ZipCode': req.params.ZipCode, 'Address': { $regex: req.params.Address, $options: '#' } }, { 'Address': 1, 'Locality': 1, 'State': 1, 'ZipCode': 1, 'Price': 1, 'AreaSpace_SQFT': 1, 'EstimatedRent': 1, 'Status': 1, 'ZPID': 1, 'Avg_Rent': 1 }, (err, housings) => {
+            if (err) {
+                res.send(err);
+            }
+            res.send(housings);
+        });
+    });
   //tejasviadded
   
     
