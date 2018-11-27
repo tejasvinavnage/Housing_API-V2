@@ -188,6 +188,18 @@ export default({ config, db }) => {
       res.send(housings);
     });
   });
+  
+   // 'housing/Coordinates/State=:State&Locality=:Locality&Address=:Address' - Read all houses filtered by State, Locality, ZipCode and return the Coordinates ( Longitude and Latitude )
+  api.get('/Coordinates/State=:State/Locality=:Locality/Address=:Address/:p', (req, res) => {
+    Housing.find({'State': req.params.State, 'Locality': req.params.Locality, 'Address': {$regex : req.params.Address}}, {'_id' : 0, 'Longitude' : 1, 'Latitude' : 1}, {skip : parseInt(req.params.p), limit : parseInt(10)}, (err, housings) => {
+      if (err) {
+        res.send(err);
+      }
+      res.send(housings);
+    });
+  });
+  
+  
 
 
   //tejasviadded
@@ -224,8 +236,8 @@ export default({ config, db }) => {
   });
 
     // 'housing/Coordinates/Address=:Address' - Read all houses filtered by State, Locality, ZipCode and return the Coordinates ( Longitude and Latitude )
-    api.get('/Coordinates/Address=:Address/Bed=:Bedrooms/Bath=:Bathrooms/Area=:AreaSpace_SQFT/Price=:Price/estRent=:EstimatedRent/', (req, res) => {
-        Housing.find({ 'Address': { $regex: req.params.Address, $options : '#' }, 'Bedrooms': { $eq: req.params.Bedrooms }, 'Bathrooms': { $eq: req.params.Bathrooms }, 'AreaSpace_SQFT': { $lte: req.params.AreaSpace_SQFT }, 'Price': { $lte: req.params.Price }, 'EstimatedRent': { $lte: req.params.EstimatedRent } }, { '_id': 0, 'Longitude': 1, 'Latitude': 1 }, { skip: parseInt(req.params.p), limit: parseInt(10) }, (err, housings) => {
+    api.get('/Coordinates/State=:State/Locality=:Locality/Address=:Address/Bed=:Bedrooms/Bath=:Bathrooms/Area=:AreaSpace_SQFT/Price=:Price/estRent=:EstimatedRent/', (req, res) => {
+        Housing.find({'State': req.params.State, 'Locality': req.params.Locality, 'Address': { $regex: req.params.Address, $options : '#' }, 'Bedrooms': { $eq: req.params.Bedrooms }, 'Bathrooms': { $eq: req.params.Bathrooms }, 'AreaSpace_SQFT': { $lte: req.params.AreaSpace_SQFT }, 'Price': { $lte: req.params.Price }, 'EstimatedRent': { $lte: req.params.EstimatedRent } }, { '_id': 0, 'Longitude': 1, 'Latitude': 1 }, { skip: parseInt(req.params.p), limit: parseInt(10) }, (err, housings) => {
             if (err) {
                 res.send(err);
             }
