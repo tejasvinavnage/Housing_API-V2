@@ -87,7 +87,7 @@ export default({ config, db }) => {
 
   // 'housing/address' - get estimated rent price of address with fields HouseType, zipCode, Area, Price, Estimated Rent
   api.get('/:Address/', (req, res) => {
-      Housing.find({ 'Address': { $regex: req.params.Address, $options: '#' } }, { 'Address': 1, 'Locality': 1, 'State': 1, 'ZipCode': 1, 'Price': 1, 'AreaSpace_SQFT': 1, 'EstimatedRent': 1, 'Status': 1, 'ZPID': 1, 'Avg_Rent' : 1}, (err, housings) => {
+      Housing.find({ 'Address': { $regex: req.params.Address} }, { 'Address': 1, 'Locality': 1, 'State': 1, 'ZipCode': 1, 'Price': 1, 'AreaSpace_SQFT': 1, 'EstimatedRent': 1, 'Status': 1, 'ZPID': 1, 'Avg_Rent' : 1}, (err, housings) => {
       if (err) {
         res.send(err);
       }
@@ -139,7 +139,7 @@ export default({ config, db }) => {
   
     // 'housing/Address=:Address' - Read all houses search filtered by Address and return the selected fields Address, Locality, State, ZipCode, Price, Area, EstimatedRent
   api.get('/Address=:Address/:p', (req, res) => {
-      Housing.find({ 'Address': { $regex: req.params.Address, $options: '#' } }, { 'Address': 1, 'Locality': 1, 'State': 1, 'ZipCode': 1, 'Price': 1, 'AreaSpace_SQFT': 1, 'EstimatedRent': 1, 'Status': 1, 'Description': 1, 'Bedrooms': 1, 'Bathrooms': 1, 'Fact': 1, 'ZPID': 1, 'Avg_Rent' : 1 }, {skip: parseInt(req.params.p), limit : parseInt(10)}, (err, housings) => {
+      Housing.find({ 'Address': { $regex: req.params.Address } }, { 'Address': 1, 'Locality': 1, 'State': 1, 'ZipCode': 1, 'Price': 1, 'AreaSpace_SQFT': 1, 'EstimatedRent': 1, 'Status': 1, 'Description': 1, 'Bedrooms': 1, 'Bathrooms': 1, 'Fact': 1, 'ZPID': 1, 'Avg_Rent' : 1 }, {skip: parseInt(req.params.p), limit : parseInt(10)}, (err, housings) => {
       if (err) {
         res.send(err);
       }
@@ -200,8 +200,6 @@ export default({ config, db }) => {
   });
   
   
-
-
   //tejasviadded
    // '/housing/Coordinates/:State' - Read all houses filtered by State and return the Coordinates ( Longitude and Latitude )
   api.get('/Coordinates/State=:State/Bed=:Bedrooms/Bath=:Bathrooms/Area=:AreaSpace_SQFT/Price=:Price/estRent=:EstimatedRent/', (req, res) => {
@@ -237,7 +235,7 @@ export default({ config, db }) => {
 
     // 'housing/Coordinates/Address=:Address' - Read all houses filtered by State, Locality, ZipCode and return the Coordinates ( Longitude and Latitude )
     api.get('/Coordinates/State=:State/Locality=:Locality/Address=:Address/Bed=:Bedrooms/Bath=:Bathrooms/Area=:AreaSpace_SQFT/Price=:Price/estRent=:EstimatedRent/', (req, res) => {
-        Housing.find({'State': req.params.State, 'Locality': req.params.Locality, 'Address': { $regex: req.params.Address, $options : '#' }, 'Bedrooms': { $eq: req.params.Bedrooms }, 'Bathrooms': { $eq: req.params.Bathrooms }, 'AreaSpace_SQFT': { $lte: req.params.AreaSpace_SQFT }, 'Price': { $lte: req.params.Price }, 'EstimatedRent': { $lte: req.params.EstimatedRent } }, { '_id': 0, 'Longitude': 1, 'Latitude': 1 }, { skip: parseInt(req.params.p), limit: parseInt(10) }, (err, housings) => {
+        Housing.find({'State': req.params.State, 'Locality': req.params.Locality, 'Address': { $regex: req.params.Address}, 'Bedrooms': { $eq: req.params.Bedrooms }, 'Bathrooms': { $eq: req.params.Bathrooms }, 'AreaSpace_SQFT': { $lte: req.params.AreaSpace_SQFT }, 'Price': { $lte: req.params.Price }, 'EstimatedRent': { $lte: req.params.EstimatedRent } }, { '_id': 0, 'Longitude': 1, 'Latitude': 1 }, { skip: parseInt(req.params.p), limit: parseInt(10) }, (err, housings) => {
             if (err) {
                 res.send(err);
             }
@@ -245,9 +243,9 @@ export default({ config, db }) => {
         });
     });
 
-    // 'housing/Details/address' - get estimated rent price of address with fields HouseType, zipCode, Area, Price, Estimated Rent
-    api.get('Details/State=:State/Locality=:Locality/ZipCode=:ZipCode/Address=:Address/', (req, res) => {
-        Housing.find({ 'State': req.params.State, 'Locality': req.params.Locality, 'ZipCode': req.params.ZipCode, 'Address': { $regex: req.params.Address, $options: '#' } }, { 'Address': 1, 'Locality': 1, 'State': 1, 'ZipCode': 1, 'Price': 1, 'AreaSpace_SQFT': 1, 'EstimatedRent': 1, 'Status': 1, 'ZPID': 1, 'Avg_Rent': 1 }, (err, housings) => {
+    // 'housing/State=:State&Locality=:Locality&ZipCode=:ZipCode' - Read all houses filtered by State, Locality, ZipCode and return the selected fields Address, Locality, State, ZipCode, Price, Area and EstimatedRent, Status, ZPID, Avg_Rent
+    api.get('/State=:State/Locality=:Locality/ZipCode=:ZipCode/Address=:Address/', (req, res) => {
+        Housing.find({ 'State': req.params.State, 'Locality': req.params.Locality, 'ZipCode': req.params.ZipCode, 'Address': { $regex: req.params.Address} }, { 'Address': 1, 'Locality': 1, 'State': 1, 'ZipCode': 1, 'Price': 1, 'AreaSpace_SQFT': 1, 'EstimatedRent': 1, 'Status': 1, 'ZPID': 1, 'Avg_Rent': 1 }, (err, housings) => {
             if (err) {
                 res.send(err);
             }
